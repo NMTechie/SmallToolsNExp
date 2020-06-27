@@ -19,7 +19,7 @@ namespace StringComparerExp
                 TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "2"));
             try
             {
-                CloudStorageAccount sta = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=usndint0a6sta02;AccountKey=m3K55J4RHxe9rltM9L3dPi+a6MS7DO7Id4DQzlGYscYvKdRqbzPkPWCKcMq5smIZ7HqZ8qYSv05gE3rMoCPtNg==;EndpointSuffix=core.windows.net");
+                CloudStorageAccount sta = CloudStorageAccount.Parse("");
                 CloudTableClient tableClient = sta.CreateCloudTableClient();
                 CloudTable table = tableClient.GetTableReference("TestQuestionnaireComments");
                 var result = table.ExecuteQuery(tableQuery).ToList().FirstOrDefault();
