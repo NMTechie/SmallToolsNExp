@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDBContext>(FillOptions);
 
+
 void FillOptions(DbContextOptionsBuilder dbContextOptionBuilder)
 {
     dbContextOptionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),FillSqlServerOptions);
@@ -50,6 +51,9 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+var dbContext = builder.Services.BuildServiceProvider().GetService<ApplicationDBContext>(); 
+InitialBootStrapper.SeedInitialData(dbContext);
 
 app.Run();
 
