@@ -1,10 +1,27 @@
+/*
+ * https://graphql-dotnet.github.io/docs/migrations/migration5/
+ * https://github.com/graphql-dotnet/graphql-dotnet/issues/2206
+ */
+using GraphQL;
+using GraphQL.Instrumentation;
+using GraphQL.MicrosoftDI;
+using GraphQL.Server;
+using GraphQL.SystemTextJson;
+using GraphQL.DataLoader;
+using GraphQL.Server.Ui.Playground;
+
+using GraphQLExp.ApplicationGraphQL;
+using GraphQLExp.ApplicationGraphQL.CustomTypes;
+using GraphQLExp.ApplicationGraphQL.Schemas;
 using GraphQLExp.DataAccess;
+using GraphQLExp.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDBContext>(FillOptions);
+builder.Services.AddDbContext<ApplicationDBContext>(FillOptions,contextLifetime:ServiceLifetime.Transient, optionsLifetime:ServiceLifetime.Transient);
 
 
 void FillOptions(DbContextOptionsBuilder dbContextOptionBuilder)
@@ -21,8 +38,37 @@ void FillSqlServerOptions(SqlServerDbContextOptionsBuilder sqlOptions)
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<StudentRepository>();
+
+//GraphQL Section
+builder.Services.AddTransient<StudentQuery>();
+builder.Services.AddTransient<ProductSampleQuery>();
+builder.Services.AddGraphQL(builder => builder
+            .AddMetrics()
+            .AddDocumentExecuter<ApolloTracingDocumentExecuter>()
+            .AddHttpMiddleware<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>()
+            //.AddWebSocketsHttpMiddleware<ChatSchema>()
+            .AddSchema<ProductSampleSchema>()
+            .ConfigureExecutionOptions(options =>
+            {
+                options.EnableMetrics = true;
+                var logger = options.RequestServices.GetRequiredService<ILogger<Program>>();
+                options.UnhandledExceptionDelegate = ctx =>
+                {
+                    logger.LogError("{Error} occurred", ctx.OriginalException.Message);
+                    return Task.CompletedTask;
+                };
+            })
+            .AddSystemTextJson()
+            //.AddErrorInfoProvider<CustomErrorInfoProvider>()
+            //.AddWebSockets()
+            .AddDataLoader()
+            .AddGraphTypes(typeof(ProductSampleSchema).Assembly));
+
 
 var app = builder.Build();
+app.UseGraphQL<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>();
+app.UseGraphQLPlayground(new PlaygroundOptions());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
