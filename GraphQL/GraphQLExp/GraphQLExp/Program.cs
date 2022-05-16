@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDBContext>(FillOptions,contextLifetime:ServiceLifetime.Transient, optionsLifetime:ServiceLifetime.Transient);
+builder.Services.AddDbContext<ApplicationDBContext>(FillOptions,contextLifetime:ServiceLifetime.Singleton, optionsLifetime:ServiceLifetime.Singleton);
 
 
 void FillOptions(DbContextOptionsBuilder dbContextOptionBuilder)
@@ -39,16 +39,38 @@ void FillSqlServerOptions(SqlServerDbContextOptionsBuilder sqlOptions)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<StudentRepository>();
+builder.Services.AddTransient<AddressRepository>();
+builder.Services.AddTransient<SubjectRepository>();
 
 //GraphQL Section
 builder.Services.AddTransient<StudentQuery>();
 builder.Services.AddTransient<ProductSampleQuery>();
+//builder.Services.AddGraphQL(builder => builder
+//            .AddMetrics()
+//            .AddDocumentExecuter<ApolloTracingDocumentExecuter>()
+//            .AddHttpMiddleware<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>()
+//            //.AddWebSocketsHttpMiddleware<ChatSchema>()
+//            .AddSchema<ProductSampleSchema>()
+//            .ConfigureExecutionOptions(options =>
+//            {
+//                options.EnableMetrics = true;
+//                var logger = options.RequestServices.GetRequiredService<ILogger<Program>>();
+//                options.UnhandledExceptionDelegate = ctx =>
+//                {
+//                    logger.LogError("{Error} occurred", ctx.OriginalException.Message);
+//                    return Task.CompletedTask;
+//                };
+//            })
+//            .AddSystemTextJson()
+//            //.AddErrorInfoProvider<CustomErrorInfoProvider>()
+//            //.AddWebSockets()
+//            .AddDataLoader()
+//            .AddGraphTypes(typeof(ProductSampleSchema).Assembly));
 builder.Services.AddGraphQL(builder => builder
             .AddMetrics()
             .AddDocumentExecuter<ApolloTracingDocumentExecuter>()
-            .AddHttpMiddleware<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>()
-            //.AddWebSocketsHttpMiddleware<ChatSchema>()
-            .AddSchema<ProductSampleSchema>()
+            .AddHttpMiddleware<StudentsSchema, GraphQLHttpMiddlewareWithLogs<StudentsSchema>>()            
+            .AddSchema<StudentsSchema>()
             .ConfigureExecutionOptions(options =>
             {
                 options.EnableMetrics = true;
@@ -60,14 +82,14 @@ builder.Services.AddGraphQL(builder => builder
                 };
             })
             .AddSystemTextJson()
-            //.AddErrorInfoProvider<CustomErrorInfoProvider>()
-            //.AddWebSockets()
             .AddDataLoader()
-            .AddGraphTypes(typeof(ProductSampleSchema).Assembly));
+            .AddGraphTypes(typeof(StudentsSchema).Assembly));
 
 
 var app = builder.Build();
-app.UseGraphQL<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>();
+app.UseGraphQL<StudentsSchema, GraphQLHttpMiddlewareWithLogs<StudentsSchema>>();
+//app.UseGraphQL<ProductSampleSchema, GraphQLHttpMiddlewareWithLogs<ProductSampleSchema>>();
+
 app.UseGraphQLPlayground(new PlaygroundOptions());
 
 // Configure the HTTP request pipeline.

@@ -1,48 +1,25 @@
 ﻿using GraphQL.Types;
 using GraphQLExp.Models;
+using GraphQLExp.Repository;
 
 namespace GraphQLExp.ApplicationGraphQL.CustomTypes
 {
     public class StudentType:ObjectGraphType<Student>
     {
-        public StudentType()
+        public StudentType(AddressRepository addressRepository,SubjectRepository subjectRepository)
         {
             Field(t => t.StudentId);
             Field(t => t.Name);
-            Field(t => t.ContactAddress);
-        }
-    }
-    public class AddressType : ObjectGraphType<Address>
-    {
-        public AddressType()
-        {
-            Field(t => t.AddressID);
-            Field(t => t.AddressLine1);
-            Field(t => t.AddressLine2);
-        }
-    }
-    public class SubjectType : ObjectGraphType<Subject>
-    {
-        public SubjectType()
-        {
-            Field(t => t.SubjectId);
-            Field(t => t.SubjectName);
-            Field(t => t.SubjectWeightage);
-        }
-    }
-    public class TeacherType : ObjectGraphType<Teacher>
-    {
-        public TeacherType()
-        {
-            Field(t => t.TeacherId);
-            Field(t => t.TeacherName);
-        }
-    }
-    public class ScoreType : ObjectGraphType<Score>
-    {
-        public ScoreType()
-        {
-            Field(t => t.ScoreID);;
+            Field(t => t.FirstName);
+            Field(t => t.LastName);
+            Field<AddressType>(
+                "StudentAddress",
+                "This field provides the address of a student",
+                resolve: context => addressRepository.GetAddressOfAStudent(context.Source.StudentId));
+            Field<ListGraphType<SubjectType>>(
+                "StudentSubjects",
+                "This field provides the subjects list opted by a student",
+                resolve: context => subjectRepository.GetSubjctsOfAStudent(context.Source.StudentId));
         }
     }
 }

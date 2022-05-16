@@ -9,6 +9,11 @@ namespace GraphQLExp.DataAccess
         {
             
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>().HasMany(c => c.OptedSubjects).WithMany(e=>e.OptedBy);
+            modelBuilder.Entity<Student>().HasOne(c => c.ContactAddress);
+        }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
