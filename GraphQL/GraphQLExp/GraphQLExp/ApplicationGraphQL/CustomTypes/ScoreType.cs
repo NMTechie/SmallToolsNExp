@@ -3,12 +3,11 @@ using GraphQLExp.Models;
 
 namespace GraphQLExp.ApplicationGraphQL.CustomTypes
 {
-    public class ScoreType : ObjectGraphType<Score>
+    public class ScoreType : ObjectGraphType
     {
         public ScoreType()
         {
-            Field(t => t.ScoreID);
-            Field(t => t.MarksObtained);
+            Field<IntGraphType>("TotalScore");
         }
     }
 }

@@ -33,5 +33,18 @@ namespace GraphQLExp.Repository
             }
             return subjcts;
         }
+
+        internal int GetTotalScore(int studentId)
+        {
+            var optedSubjectMapping = _dbContext.StudentSubject.Where(x => x.StudentId == studentId).ToList();
+            int totalScore = 0;
+            foreach (var item in optedSubjectMapping)
+            {
+                var score = _dbContext.Scores.Where(x => x.MarksForStudent.StudentId == studentId && x.MarksForSubject.SubjectId == item.SubjectId).FirstOrDefault();
+                if(score!=null)
+                    totalScore = totalScore + score.MarksObtained;
+            }
+            return totalScore;
+        }
     }
 }

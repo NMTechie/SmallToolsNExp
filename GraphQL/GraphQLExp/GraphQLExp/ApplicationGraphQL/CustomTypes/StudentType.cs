@@ -20,6 +20,10 @@ namespace GraphQLExp.ApplicationGraphQL.CustomTypes
                 "AssignedSubjects",
                 "This field provides the subjects list opted by a student",
                 resolve: context => studentRepository.GetSubjctsOfAStudent(context.Source.StudentId));
+            Field<IntGraphType>(
+                "TotalScore",
+                "This field provides score accumulated by a student",
+                resolve: context => studentRepository.GetTotalScore(context.Source.StudentId));
         }
     }
 }
