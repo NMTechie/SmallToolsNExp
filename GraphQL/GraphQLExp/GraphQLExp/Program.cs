@@ -41,6 +41,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<StudentRepository>();
 builder.Services.AddTransient<AddressRepository>();
 builder.Services.AddTransient<SubjectRepository>();
+builder.Services.AddTransient<TeacherRepository>();
 
 //GraphQL Section
 builder.Services.AddTransient<StudentQuery>();

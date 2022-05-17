@@ -12,7 +12,7 @@ namespace GraphQLExp.Repository
         }
         public Address GetAddressOfAStudent(int studentId)
         {
-            return _dbContext.Students.Where(x => x.StudentId == studentId).FirstOrDefault().ContactAddress;
+            return _dbContext.Students.Where(x => x.StudentId == studentId).FirstOrDefault().Address;
         }
     }
 }

@@ -56,7 +56,8 @@ namespace GraphQLExp.DataAccess
                 {
                     TeacherId = i,
                     TeacherName = (i*10).ToString(),
-                    Conatct = AddressesMasterCopy[1],
+                    AddressId = AddressesMasterCopy[1].AddressID,
+                    Address = AddressesMasterCopy[1],
                 };
                 TeacherMasterCopy.Add(teacher);
                 dbContext.Add(teacher);
@@ -78,7 +79,7 @@ namespace GraphQLExp.DataAccess
                     SubjectName = $"Subject {i.ToString()} ",
                     AllotedTime = i*10,
                     SubjectWeightage = i*5,
-                    AllotedTeachers = TeacherMasterCopy.Where(t => t.TeacherId <= i).ToList()
+                    //AllotedTeachers = TeacherMasterCopy.Where(t => t.TeacherId <= i).ToList()
                 };
                 SubjectMasterCopy.Add(subject);
                 dbContext.Add(subject);
@@ -87,6 +88,28 @@ namespace GraphQLExp.DataAccess
                 dbContext.SaveChanges();
                 dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Subjects] OFF");
                 dbContext.Database.CloseConnection();
+            }
+            //Insert Subject Teacher relationship
+            int counter = 1;
+            foreach (var subject in SubjectMasterCopy)
+            {
+                for (int k = 1; k <= subject.SubjectId; k++)
+                {
+                    var subjectTeacher = new SubjectTeacher()
+                    {
+                        Id = counter,
+                        SubjectId = subject.SubjectId,
+                        TeacherId = TeacherMasterCopy.Where(t => t.TeacherId == k).FirstOrDefault().TeacherId
+                    };
+                    dbContext.Add(subjectTeacher);
+                    dbContext.Database.OpenConnection();
+                    dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[SubjectTeacher] ON");
+                    dbContext.SaveChanges();
+                    dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[SubjectTeacher] OFF");
+                    dbContext.Database.CloseConnection();
+                    counter++;
+                }
+                
             }
             #endregion
 
@@ -98,8 +121,9 @@ namespace GraphQLExp.DataAccess
                     StudentId = i,
                     LastName = $"StudentLastName {i.ToString()} ",
                     FirstName = $"StudentFirstName {i.ToString()} ",
-                    ContactAddress = AddressesMasterCopy[0],
-                    OptedSubjects = SubjectMasterCopy.Where(t => t.SubjectId <= i).ToList()
+                    AddressID = AddressesMasterCopy[0].AddressID,
+                    Address = AddressesMasterCopy[0],
+                    //OptedSubjects = SubjectMasterCopy.Where(t => t.SubjectId <= i).ToList()
                 };
                 StudentMasterCopy.Add(student);
                 dbContext.Add(student);
@@ -108,6 +132,31 @@ namespace GraphQLExp.DataAccess
                 dbContext.SaveChanges();
                 dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Students] OFF");
                 dbContext.Database.CloseConnection();
+            }
+            //Insert Student Subject relationship
+            counter = 1;
+            foreach (var student in StudentMasterCopy)
+            {
+                for (int k = 1; k <= 5; k++)
+                {                    
+                    var studentSubject = new StudentSubject()
+                    {
+                        Id = counter,
+                        StudentId = student.StudentId,
+                        SubjectId = SubjectMasterCopy.Where(t => t.SubjectId == k).FirstOrDefault().SubjectId
+                    };
+                    dbContext.Add(studentSubject);
+                    dbContext.Database.OpenConnection();
+                    dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[StudentSubject] ON");
+                    dbContext.SaveChanges();
+                    dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[StudentSubject] OFF");
+                    dbContext.Database.CloseConnection();
+                    counter++;
+                    if (k > student.StudentId)
+                        break;
+                }
+
+                
             }
             #endregion
 
@@ -118,7 +167,7 @@ namespace GraphQLExp.DataAccess
                 {
                     ScoreID = i,
                     MarksForStudent = StudentMasterCopy.Where(t => t.StudentId == i).First(),
-                    MarksForSubject = (StudentMasterCopy.Where(t => t.StudentId == i).First()).OptedSubjects.Last(),
+                    MarksForSubject = (StudentMasterCopy.Where(t => t.StudentId == i).First()).OptedSubjects.Last().Subject,
                     MarksObtained = i * 15
                 };
                 ScoreMasterCopy.Add(score);

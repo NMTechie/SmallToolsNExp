@@ -12,7 +12,18 @@ namespace GraphQLExp.Repository
         }
         public List<Subject> GetSubjctsOfAStudent(int studentId)
         {
-            return _dbContext.Students.Where(x => x.StudentId == studentId).FirstOrDefault().OptedSubjects;
+            return new List<Subject>();
+        }
+
+        internal List<Teacher> GetAssignedTeacher(int subjectId)
+        {
+            var assignedTeacherMapping = _dbContext.SubjectTeacher.Where(x => x.SubjectId == subjectId).ToList(); ;
+            List<Teacher> assignedTeacher = new List<Teacher>();
+            foreach (var teacher in assignedTeacherMapping)
+            {
+                assignedTeacher.Add(_dbContext.Teachers.Where(t => t.TeacherId == teacher.TeacherId).First());
+            }
+            return assignedTeacher;
         }
     }
 }

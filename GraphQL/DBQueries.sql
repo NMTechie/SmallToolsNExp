@@ -18,8 +18,8 @@ DELETE FROM [dbo].Subjects
 --DROP TABLE [dbo].StudentSubject
 --DROP TABLE [dbo].SubjectTeacher
 --DROP TABLE [dbo].Students
---DROP TABLE [dbo].Addresses
 --DROP TABLE [dbo].Teachers
 --DROP TABLE [dbo].Subjects
+--DROP TABLE [dbo].Addresses
 --DROP TABLE [dbo].__EFMigrationsHistory
 

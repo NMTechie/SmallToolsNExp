@@ -3,6 +3,7 @@ using GraphQLExp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GraphQLExp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220517022231_StudentAddressupdated")]
+    partial class StudentAddressupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,29 +111,6 @@ namespace GraphQLExp.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("GraphQLExp.Models.StudentSubject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("StudentSubject");
-                });
-
             modelBuilder.Entity("GraphQLExp.Models.Subject", b =>
                 {
                     b.Property<int>("SubjectId")
@@ -155,29 +134,6 @@ namespace GraphQLExp.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("GraphQLExp.Models.SubjectTeacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("SubjectTeacher");
-                });
-
             modelBuilder.Entity("GraphQLExp.Models.Teacher", b =>
                 {
                     b.Property<int>("TeacherId")
@@ -186,7 +142,7 @@ namespace GraphQLExp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeacherId"), 1L, 1);
 
-                    b.Property<int>("AddressId")
+                    b.Property<int>("ConatctAddressID")
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherName")
@@ -195,9 +151,39 @@ namespace GraphQLExp.Migrations
 
                     b.HasKey("TeacherId");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("ConatctAddressID");
 
                     b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("StudentSubject", b =>
+                {
+                    b.Property<int>("OptedByStudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OptedSubjectsSubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OptedByStudentId", "OptedSubjectsSubjectId");
+
+                    b.HasIndex("OptedSubjectsSubjectId");
+
+                    b.ToTable("StudentSubject");
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.Property<int>("AllotedTeachersTeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectsAllotedSubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AllotedTeachersTeacherId", "SubjectsAllotedSubjectId");
+
+                    b.HasIndex("SubjectsAllotedSubjectId");
+
+                    b.ToTable("SubjectTeacher");
                 });
 
             modelBuilder.Entity("GraphQLExp.Models.Score", b =>
@@ -230,77 +216,50 @@ namespace GraphQLExp.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("GraphQLExp.Models.StudentSubject", b =>
-                {
-                    b.HasOne("GraphQLExp.Models.Student", "Student")
-                        .WithMany("OptedSubjects")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GraphQLExp.Models.Subject", "Subject")
-                        .WithMany("OptedBy")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("GraphQLExp.Models.SubjectTeacher", b =>
-                {
-                    b.HasOne("GraphQLExp.Models.Subject", "Subject")
-                        .WithMany("AllotedTeachers")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GraphQLExp.Models.Teacher", "Teacher")
-                        .WithMany("SubjectsAlloted")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Subject");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("GraphQLExp.Models.Teacher", b =>
                 {
-                    b.HasOne("GraphQLExp.Models.Address", "Address")
-                        .WithMany("Teachers")
-                        .HasForeignKey("AddressId")
+                    b.HasOne("GraphQLExp.Models.Address", "Conatct")
+                        .WithMany()
+                        .HasForeignKey("ConatctAddressID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("Conatct");
+                });
+
+            modelBuilder.Entity("StudentSubject", b =>
+                {
+                    b.HasOne("GraphQLExp.Models.Student", null)
+                        .WithMany()
+                        .HasForeignKey("OptedByStudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraphQLExp.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("OptedSubjectsSubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.HasOne("GraphQLExp.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("AllotedTeachersTeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GraphQLExp.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsAllotedSubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GraphQLExp.Models.Address", b =>
                 {
                     b.Navigation("Students");
-
-                    b.Navigation("Teachers");
-                });
-
-            modelBuilder.Entity("GraphQLExp.Models.Student", b =>
-                {
-                    b.Navigation("OptedSubjects");
-                });
-
-            modelBuilder.Entity("GraphQLExp.Models.Subject", b =>
-                {
-                    b.Navigation("AllotedTeachers");
-
-                    b.Navigation("OptedBy");
-                });
-
-            modelBuilder.Entity("GraphQLExp.Models.Teacher", b =>
-                {
-                    b.Navigation("SubjectsAlloted");
                 });
 #pragma warning restore 612, 618
         }

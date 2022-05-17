@@ -6,7 +6,7 @@ namespace GraphQLExp.ApplicationGraphQL.CustomTypes
 {
     public class StudentType:ObjectGraphType<Student>
     {
-        public StudentType(AddressRepository addressRepository,SubjectRepository subjectRepository)
+        public StudentType(AddressRepository addressRepository,StudentRepository studentRepository)
         {
             Field(t => t.StudentId);
             Field(t => t.Name);
@@ -15,11 +15,11 @@ namespace GraphQLExp.ApplicationGraphQL.CustomTypes
             Field<AddressType>(
                 "StudentAddress",
                 "This field provides the address of a student",
-                resolve: context => addressRepository.GetAddressOfAStudent(context.Source.StudentId));
+                resolve: context => studentRepository.GetAddressOfAStudent(context.Source.StudentId));
             Field<ListGraphType<SubjectType>>(
-                "StudentSubjects",
+                "AssignedSubjects",
                 "This field provides the subjects list opted by a student",
-                resolve: context => subjectRepository.GetSubjctsOfAStudent(context.Source.StudentId));
+                resolve: context => studentRepository.GetSubjctsOfAStudent(context.Source.StudentId));
         }
     }
 }
