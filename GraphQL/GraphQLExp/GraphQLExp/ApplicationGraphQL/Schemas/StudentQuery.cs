@@ -14,6 +14,15 @@ namespace GraphQLExp.ApplicationGraphQL.Schemas
                 "Students",
                 resolve: context => _studentRepository.GetAll()
                 );
+            Field<StudentType>(
+                "Student",
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>>() { Name = "studentId" }),
+                resolve: context => 
+                {
+                    var id = (int)context.Arguments["studentId"].Value;
+                    return _studentRepository.GetStudentDetails(id); 
+                }
+                );
         }
     }
 }

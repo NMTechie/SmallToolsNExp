@@ -1,4 +1,5 @@
-﻿using GraphQLExp.DataAccess;
+﻿using GraphQL.Types;
+using GraphQLExp.DataAccess;
 using GraphQLExp.Models;
 
 namespace GraphQLExp.Repository
@@ -15,7 +16,10 @@ namespace GraphQLExp.Repository
         {
             return _dbContext.Students.ToList();
         }
-
+        public Student GetStudentDetails(int id)
+        {
+            return _dbContext.Students.Where(x=>x.StudentId == id).FirstOrDefault();
+        }
         internal Address GetAddressOfAStudent(int studentId)
         {
             var addressid = _dbContext.Students.Where(x => x.StudentId == studentId).FirstOrDefault().AddressID;
@@ -33,7 +37,6 @@ namespace GraphQLExp.Repository
             }
             return subjcts;
         }
-
         internal int GetTotalScore(int studentId)
         {
             var optedSubjectMapping = _dbContext.StudentSubject.Where(x => x.StudentId == studentId).ToList();
