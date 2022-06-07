@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ParentApp1.Models;
 using System.Diagnostics;
+using ParentApp1.Models;
 
 namespace ParentApp1.Controllers
 {
@@ -15,7 +16,8 @@ namespace ParentApp1.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            TokenModel tokenModel = new TokenModel() { Hiddenvalue = "This is a test value"};
+            return View(tokenModel);
         }
 
         public IActionResult Privacy()
