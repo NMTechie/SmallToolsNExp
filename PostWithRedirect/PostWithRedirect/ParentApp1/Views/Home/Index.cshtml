@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>    
+    <a id="Redirect" href="@Url.Action("HandleRedirect","Home")">RedirectWithPost</a>
+    <form action="https://localhost:7065/Home/HandlePostCall" method="post">
+        <input type="hidden" name="hidVal" value="Test value" />
+        <input type="submit" name="btnSubmit" value="Post Your Answer">
+    </form>
+</div>
