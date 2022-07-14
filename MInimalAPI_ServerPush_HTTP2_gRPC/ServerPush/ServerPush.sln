@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalAPIHttpStreaming", "MinimalAPIHttpStreaming\MinimalAPIHttpStreaming.csproj", "{F3BAC086-A018-4ED1-9460-1DF0BED4753D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3BAC086-A018-4ED1-9460-1DF0BED4753D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3BAC086-A018-4ED1-9460-1DF0BED4753D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3BAC086-A018-4ED1-9460-1DF0BED4753D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3BAC086-A018-4ED1-9460-1DF0BED4753D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C364A9F6-2A0E-4082-B918-2A14797A6BFD}
+	EndGlobalSection
+EndGlobal
