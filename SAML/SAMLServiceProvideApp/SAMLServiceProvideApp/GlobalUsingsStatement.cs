@@ -1,0 +1,11 @@
+﻿global using ITfoxtec.Identity.Saml2;
+global using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+global using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Options;
+global using ITfoxtec.Identity.Saml2.MvcCore;
+global using ITfoxtec.Identity.Saml2.Schemas;
+global using System.Security.Authentication;
+global using ITfoxtec.Identity.Saml2.Claims;
+global using System.Security.Claims;
