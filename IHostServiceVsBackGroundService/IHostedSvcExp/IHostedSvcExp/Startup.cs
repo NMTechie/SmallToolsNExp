@@ -17,6 +17,7 @@ namespace IHostedSvcExp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHostedService, MyHostedService>();
+            services.AddTransient<MyProcessingUnit>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
