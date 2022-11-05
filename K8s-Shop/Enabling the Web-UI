@@ -1,0 +1,7 @@
+1. kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml (go to the web page where the web-ui installaion is documented)
+2. kubectl get pods --all-namespaces - to check the dashboard pod is up and running 
+   2.1 If the pod is not running then first pull the image through docker pull 
+   2.2 Restart the same deployment through command kubectl rollout restart deployment <deployment name> -n <namespace>
+3. Create the admin user through yaml deployment apply
+4. create the clusterrolebinding for the service account created in step 3
+5. create the bearer token for the service account through kubectl -n kubernetes-dashboard create token admin-user
