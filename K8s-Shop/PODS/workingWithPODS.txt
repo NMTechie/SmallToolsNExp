@@ -1,0 +1,5 @@
+k run my-nginx --image=nginx:alpine
+k get pods or k get all => as we are not speciffying anything all are created under default namesspace
+
+Now the pod is not accessible as the service created for this pod is ClusterIP. So need the port mapping
+k port-forward my-nginx 8080:80

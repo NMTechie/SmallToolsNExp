@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginxfromyaml # this is the name of the pod
+  labels: 
+    name: nginxweb
+    env: local
+spec:
+  containers:
+  - name: nginxfromyaml # this name of the container
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+      name: http
+      protocol: TCP

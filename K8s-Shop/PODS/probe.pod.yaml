@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginxfromyamlprobe # this is the name of the pod
+  labels: 
+    name: nginxweb
+    env: local
+spec:
+  containers:
+  - name: nginxfromyaml # this name of the container
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+      name: http
+      protocol: TCP
+    livenessProbe: 
+      httpGet:
+        path: /index.html
+        port: 80
+      initialDelaySeconds: 15
+      timeoutSeconds: 2
+      periodSeconds: 5
+      failureThreshold: 1
+    readinessProbe: 
+      httpGet:
+        path: /index.html
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 5
+      failureThreshold: 1
