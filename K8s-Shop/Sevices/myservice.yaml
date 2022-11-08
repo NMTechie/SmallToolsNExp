@@ -1,0 +1,20 @@
+# Services use labels to associate it with pods
+# Services are Layer 4 load blancing
+# Kubeproxy creates the services and assign virtual IP.
+# Services are not ephemeral
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myfirstservice # The name of the Service. It gets a DNS entry in the K8s own DNS 
+  labels:
+    name: myfirstservice
+    env: local
+spec:
+  type: ClusterIP
+  selector: 
+      tier: frontendwebserver
+  ports:
+    - name: http
+      port: 8080 #this is overall service port
+      targetPort: 80 #this is the container port

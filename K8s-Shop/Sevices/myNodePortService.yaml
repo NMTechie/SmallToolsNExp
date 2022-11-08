@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myfirstnodeportservice # The name of the Service. It gets a DNS entry in the K8s own DNS 
+  labels:
+    name: myfirstnodeportservice
+    env: local
+spec:
+  type: NodePort
+  selector: 
+      tier: frontendwebserver
+  ports:
+    - name: http
+      port: 8080 #this is overall service port
+      targetPort: 80 #this is the container port
+      nodePort: 31000 # this optional. It will be specified dynamically in range of 30,000 - 32,767
