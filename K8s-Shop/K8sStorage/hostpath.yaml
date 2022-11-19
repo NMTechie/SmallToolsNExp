@@ -1,0 +1,31 @@
+# Here I am working in windows machine and docker - desktop is running with WSL 2 background
+# How does the WSL2 backed k8s engine interact with the underlying windows file system 
+#   - https://stackoverflow.com/questions/61083772/where-are-docker-volumes-located-when-running-wsl-using-docker-desktoppwd
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myfirstdeployment # The name of the deployment
+  labels:
+    name: myfirstdeployment
+    env: local
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      tier: alpineserver
+  template:
+    metadata:
+      labels:
+        tier: alpineserver
+    spec:
+      volumes:
+        - name: myhostpathdemo
+          hostPath:
+            path: /testpath
+      containers:
+      - name: alpineserver1
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: myhostpathdemo
+            mountPath: /server1mountpath
