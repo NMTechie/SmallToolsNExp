@@ -1,0 +1,35 @@
+# https://learn.microsoft.com/en-us/azure/aks/azure-files-volume
+# Volumes related to Azure storage usage requires azure storage CSI driver to be installed
+# further need to go to AKS
+# 1. Create the Secret -> kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+  - image: alpine
+    imagePullPolicy: IfNotPresent
+    name: mypod
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+    volumeMounts:
+      - name: azure
+        mountPath: /mnt/azure
+  volumes:
+  - name: azure
+    csi:
+      driver: file.csi.azure.com
+      readOnly: false
+      volumeAttributes:
+        secretName: azure-filesharesecret  # required (example of using secret as volumes.)
+        shareName: mypvk8s  # required
+        mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30"  # optional

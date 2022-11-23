@@ -1,0 +1,24 @@
+# This is PV backed by azure storage
+# Kubernetes needs credentials to access the file share we have created. 
+# These credentials are stored in a Kubernetes secret, which is referenced when you create a Kubernetes pod
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mypv
+spec:
+  capacity:
+    storage: <Size>
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tmp
+    server: 172.17.0.2
+
+
+
