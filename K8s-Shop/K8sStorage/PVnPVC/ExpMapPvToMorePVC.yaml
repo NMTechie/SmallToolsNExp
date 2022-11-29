@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: azurefile
+  name: azurefile1
 spec:
   accessModes:
     - ReadWriteMany
@@ -14,7 +14,10 @@ spec:
     matchLabels:
       roll: two
 #(Also after creating the PVC check the STATUS of the PVC, if it is bound state means all are ok)
+
 #(When Selector and VolumeName both are mentioned in the yaml to select from the avaibale Persistant volumes
 # Then volumeName takes precidence 
 # Else selector comes into play)
-# PV to PVC mapping is One - to - One
+
+# PV to PVC mapping is One - to - One. However if you try to map more than then no error from kubectl command 
+# even kubectl describe does not reveal any helpful info

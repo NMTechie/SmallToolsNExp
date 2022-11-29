@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azurefile
+  labels:
+    roll: one
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  azureFile:
+    secretName: azure-secret
+    shareName:  mypvk8s
+    readOnly: false
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azurefiletwo
+  labels:
+    roll: two
+spec:
+  capacity:
+    storage: 25Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi # This is important while working with cloud storage (atleast seen in Azure, 
+  #as csi drivers use this storage class to provision the PV attachment with underlying cloud storage)
+  azureFile:
+    secretName: azure-secret
+    shareName:  mypvk8s
+    readOnly: false

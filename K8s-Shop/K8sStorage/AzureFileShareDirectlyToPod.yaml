@@ -1,7 +1,9 @@
 # https://learn.microsoft.com/en-us/azure/aks/azure-files-volume
+# This is not an example of creating secrect and using as volume
 # Volumes related to Azure storage usage requires azure storage CSI driver to be installed
 # further need to go to AKS
 # 1. Create the Secret -> kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+# 2. Create the file share mypvk8s before the deployment
 
 apiVersion: v1
 kind: Pod
@@ -14,6 +16,7 @@ spec:
   - image: alpine
     imagePullPolicy: IfNotPresent
     name: mypod
+    command: ['sh', '-c', 'echo The Bench Container 1 is Running ; sleep 3600']
     resources:
       requests:
         cpu: 100m
@@ -30,6 +33,6 @@ spec:
       driver: file.csi.azure.com
       readOnly: false
       volumeAttributes:
-        secretName: azure-filesharesecret  # required (example of using secret as volumes.)
+        secretName: azure-secret  # required (example of using secret as volumes.)
         shareName: mypvk8s  # required
         mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30"  # optional

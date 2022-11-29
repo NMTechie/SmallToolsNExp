@@ -1,24 +1,68 @@
-# This is PV backed by azure storage
-# Kubernetes needs credentials to access the file share we have created. 
-# These credentials are stored in a Kubernetes secret, which is referenced when you create a Kubernetes pod
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mypv
+  name: azurefile
+  labels:
+    roll: one
 spec:
   capacity:
-    storage: <Size>
-  volumeMode: Filesystem
+    storage: 20Gi
   accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  csi:
+    driver: file.csi.azure.com
+    readOnly: false
+    volumeHandle: Test123  # make sure this volumeid is unique in the cluster
+    volumeAttributes:
+      #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+      # If empty, driver will use the same resource group name as current cluster.
+      shareName: mypvk8s
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: default
   mountOptions:
-    - hard
-    - nfsvers=4.1
-  nfs:
-    path: /tmp
-    server: 172.17.0.2
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
 
+---
 
-
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azurefiletwo
+  labels:
+    roll: two
+spec:
+  capacity:
+    storage: 25Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  csi:
+    driver: file.csi.azure.com
+    readOnly: false
+    volumeHandle: Test1234  # make sure this volumeid is unique in the cluster
+    volumeAttributes:
+      #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+      shareName: mypvk8s
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: default
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
