@@ -48,3 +48,10 @@ have a one-to-one relationship.
 When this happens, the remaining storage in the bound PVs are inaccessible to other users.
 
 NOTE: Both the PVCs and the Pod using them must be in the same namespace.
+
+----------------------------------------------------------------------------------------
+The k8s namespace , The Network namespace and The process namespace are all different. 
+1. k8s namespace provides clean segregation boundary of resources in a AKS cluster
+2. The NW namespace is a linux core foundational netwroking concept
+3. The process namespace is a boundary of a process like appdomain concept
+----------------------------------------------------------------------------------------
