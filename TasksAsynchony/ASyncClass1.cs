@@ -16,7 +16,9 @@ namespace TasksAsynchony
         public async Task DoWorkAsyncClass1()
         {
             Console.WriteLine($"InSide DoWorkAsyncClass1 Called --> {Thread.CurrentThread.ManagedThreadId} --> at {DateTime.Now}");
-            await _asyncClass2.DoWorkAsyncClass2();
+            /*Read the green swiggle line for warning here*/
+            Task.Run(() => { Console.WriteLine("Hello"); });
+            //await _asyncClass2.DoWorkAsyncClass2();
             Console.WriteLine($"InSide DoWorkAsyncClass1 Ended --> {Thread.CurrentThread.ManagedThreadId} --> at {DateTime.Now}");
         }
     }
